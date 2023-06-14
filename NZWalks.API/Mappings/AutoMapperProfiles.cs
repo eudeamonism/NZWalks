@@ -10,16 +10,22 @@ namespace NZWalks.API.Mappings
         {
             //Source Model to Destination Model
 
-            //GET
+            //GET Region
             CreateMap<Region, RegionDto>().ReverseMap();
 
-            //Create
+            //Create Region
             CreateMap<AddRegionRequestDto, Region>().ReverseMap();
 
-            //Update: Dto => Domain => Dto. We need to use same body variable in Update
+            //Region, Update: Dto => Domain => Dto. We need to use same body variable in Update
             CreateMap<UpdateRegionRequestDto, Region>().ReverseMap();
 
             CreateMap<AddWalkRequestDto, Walk>().ReverseMap();
+
+            CreateMap<Walk, WalkDto>().ReverseMap();
+
+            CreateMap<Difficulty, DifficultyDto >().ReverseMap();
+
+            CreateMap<UpdateWalkRequestDto, Walk>().ReverseMap();
 
         }
     }
