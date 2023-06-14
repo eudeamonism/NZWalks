@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using NZWalks.API.CustomActionFilters;
 using NZWalks.API.Models.Domain;
 using NZWalks.API.Models.DTO;
 using NZWalks.API.Repositories;
@@ -27,18 +28,26 @@ namespace NZWalks.API.Controllers
 
         //Create Walk, POST
         [HttpPost]
+        [ValidateModel]
         public async Task<IActionResult> Create([FromBody] AddWalkRequestDto addWalkRequestDto)
         {
-            // Map Dto to Domain Model
-            var walkDomainModel = mapper.Map<Walk>(addWalkRequestDto);
+            
+                //AddWalkRequestDto Validation
+                if (ModelState.IsValid)
+                {
+                    // Map Dto to Domain Model
+                    var walkDomainModel = mapper.Map<Walk>(addWalkRequestDto);
 
-            //Call Repository to create a new walk
-            walkDomainModel = await walkRepository.CreateAsync(walkDomainModel);
+                    //Call Repository to create a new walk
+                    walkDomainModel = await walkRepository.CreateAsync(walkDomainModel);
 
 
-            //Map DomainModel to Dto
-            return Ok(mapper.Map<WalkDto>(walkDomainModel));
+                    //Map DomainModel to Dto
+                    return Ok(mapper.Map<WalkDto>(walkDomainModel));
 
+                }
+                return BadRequest(ModelState);
+            
         }
 
         //Get All Walks
@@ -70,23 +79,28 @@ namespace NZWalks.API.Controllers
         //We're expecting DTO
         [HttpPut]
         [Route("{id:Guid}")]
+        [ValidateModel]
 
         public async Task<IActionResult> Update([FromRoute] Guid id, UpdateWalkRequestDto updateWalkRequestDto)
         {
-            //Destination, Source
-            var walkDomainModel = mapper.Map<Walk>(updateWalkRequestDto);
-            //Persist to DB
-            walkDomainModel = await walkRepository.UpdateAsync(id, walkDomainModel);
+            
 
-            //Check if null
-            if (walkDomainModel == null)
-            {
-                return NotFound();
+                //Destination, Source
+                var walkDomainModel = mapper.Map<Walk>(updateWalkRequestDto);
+                //Persist to DB
+                walkDomainModel = await walkRepository.UpdateAsync(id, walkDomainModel);
+
+                //Check if null
+                if (walkDomainModel == null)
+                {
+                    return NotFound();
+                }
+
+                //Return as DTO
+                return Ok(mapper.Map<WalkDto>(walkDomainModel));
             }
 
-            //Return as DTO
-            return Ok(mapper.Map<WalkDto>(walkDomainModel));
-        }
+         
 
         [HttpDelete]
         [Route("{id:Guid}")]
