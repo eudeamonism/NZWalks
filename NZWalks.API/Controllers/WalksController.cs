@@ -31,30 +31,35 @@ namespace NZWalks.API.Controllers
         [ValidateModel]
         public async Task<IActionResult> Create([FromBody] AddWalkRequestDto addWalkRequestDto)
         {
-            
-                //AddWalkRequestDto Validation
-                if (ModelState.IsValid)
-                {
-                    // Map Dto to Domain Model
-                    var walkDomainModel = mapper.Map<Walk>(addWalkRequestDto);
 
-                    //Call Repository to create a new walk
-                    walkDomainModel = await walkRepository.CreateAsync(walkDomainModel);
+            //AddWalkRequestDto Validation
+            if (ModelState.IsValid)
+            {
+                // Map Dto to Domain Model
+                var walkDomainModel = mapper.Map<Walk>(addWalkRequestDto);
+
+                //Call Repository to create a new walk
+                walkDomainModel = await walkRepository.CreateAsync(walkDomainModel);
 
 
-                    //Map DomainModel to Dto
-                    return Ok(mapper.Map<WalkDto>(walkDomainModel));
+                //Map DomainModel to Dto
+                return Ok(mapper.Map<WalkDto>(walkDomainModel));
 
-                }
-                return BadRequest(ModelState);
-            
+            }
+            return BadRequest(ModelState);
+
         }
 
         //Get All Walks
+        // /api/walks?filterOn=Name&filterQuery=Track&sortBy=Name&isAscending=true&pageNumber=1&pageSize=10
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll([FromQuery] string? filterOn, [FromQuery] string? filterQuery,
+            [FromQuery] string? sortBy, [FromQuery] bool? isAscending, [FromQuery] int pageNumber = 1, 
+            [FromQuery] int pageSize = 1000 )
         {
-            var walksDomainModel = await walkRepository.GetAllAsync();
+            //Final step is to pass query params
+            var walksDomainModel = await walkRepository.GetAllAsync(filterOn, filterQuery, sortBy, 
+                isAscending ?? true, pageNumber, pageSize);
 
             //Map Domain Model DTO
             return Ok(mapper.Map<List<WalkDto>>(walksDomainModel));
@@ -83,38 +88,38 @@ namespace NZWalks.API.Controllers
 
         public async Task<IActionResult> Update([FromRoute] Guid id, UpdateWalkRequestDto updateWalkRequestDto)
         {
-            
 
-                //Destination, Source
-                var walkDomainModel = mapper.Map<Walk>(updateWalkRequestDto);
-                //Persist to DB
-                walkDomainModel = await walkRepository.UpdateAsync(id, walkDomainModel);
 
-                //Check if null
-                if (walkDomainModel == null)
-                {
-                    return NotFound();
-                }
+            //Destination, Source
+            var walkDomainModel = mapper.Map<Walk>(updateWalkRequestDto);
+            //Persist to DB
+            walkDomainModel = await walkRepository.UpdateAsync(id, walkDomainModel);
 
-                //Return as DTO
-                return Ok(mapper.Map<WalkDto>(walkDomainModel));
+            //Check if null
+            if (walkDomainModel == null)
+            {
+                return NotFound();
             }
 
-         
+            //Return as DTO
+            return Ok(mapper.Map<WalkDto>(walkDomainModel));
+        }
+
+
 
         [HttpDelete]
         [Route("{id:Guid}")]
 
         public async Task<IActionResult> Delete([FromRoute] Guid id)
         {
-           var walkDomainModel = await walkRepository.DeleteAsync(id);
+            var walkDomainModel = await walkRepository.DeleteAsync(id);
 
             if (walkDomainModel == null)
             {
-                return NotFound(); 
+                return NotFound();
             }
 
-           var walkDto = mapper.Map<WalkDto>(walkDomainModel);
+            var walkDto = mapper.Map<WalkDto>(walkDomainModel);
 
             return Ok(walkDto.Name + " was deleted");
 
