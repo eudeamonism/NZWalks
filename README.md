@@ -2,7 +2,7 @@
 
 ## .NET Web APi 
 
-This API houses 15 walks, trails, that show the destination's name, length in kilometoers, description, image, region code and image all with supporting ids.
+This API houses 15 walks, trails, that show the destination's name, length in kilometers, description, image, region code and image all with supporting ids.
 
 
 
