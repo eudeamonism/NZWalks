@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using NZWalks.API.Data;
@@ -21,6 +22,10 @@ builder.Services.AddDbContext<NZWalksDbContext>(options =>
 //Options were arranged in DbContext, and we are passing the connection string we created in appsettings.json
 options.UseSqlServer(builder.Configuration.GetConnectionString("NZWalksConnectionString")));
 
+//Auth DB Context
+builder.Services.AddDbContext<NZWalksAuthDbContext>(options =>
+options.UseSqlServer(builder.Configuration.GetConnectionString("NZWalksAuthConnectionString")));
+
 //REPOSITORIES
 builder.Services.AddScoped<IRegionRepository, SQLRegionRepository>();
 builder.Services.AddScoped<IWalkRepository, SQLWalkRepository>();
@@ -29,6 +34,24 @@ builder.Services.AddScoped<IWalkRepository, SQLWalkRepository>();
 
 //Auto Mapper
 builder.Services.AddAutoMapper(typeof(AutoMapperProfiles));
+
+// Identity Authentication after migrating, seeding, Auth roles: Reader and Writer
+builder.Services.AddIdentityCore<IdentityUser>()
+    .AddRoles<IdentityRole>()
+    .AddTokenProvider<DataProtectorTokenProvider<IdentityUser>>("NZWalks")
+    .AddEntityFrameworkStores<NZWalksAuthDbContext>()
+    .AddDefaultTokenProviders();
+
+// Identity Options : Password Settings
+builder.Services.Configure<IdentityOptions>(options =>
+{
+    options.Password.RequireDigit = false;
+    options.Password.RequireLowercase = false;
+    options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequireUppercase = false;
+    options.Password.RequiredLength = 6;
+    options.Password.RequiredUniqueChars = 1;
+});
 
 //JWT Authentication
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

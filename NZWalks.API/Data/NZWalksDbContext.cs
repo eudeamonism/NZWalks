@@ -7,7 +7,8 @@ namespace NZWalks.API.Data
     {
         //We create a constructor for such presets methods in an instance of this class.
         //In our constructor, we pass from MECO DbContextOptions
-        public NZWalksDbContext(DbContextOptions dbContextOptions): base(dbContextOptions)
+        //We added type to options to include multiple databases
+        public NZWalksDbContext(DbContextOptions<NZWalksDbContext> dbContextOptions): base(dbContextOptions)
         {
             
         }
