@@ -17,6 +17,28 @@ Incorporates Repositories structure to keep Controllers thin and limit access to
 
 **Walks:** Get(All), Get(one), Post(Create), Put(update), and Delete
 
+## Dependencies
+
+<details>
+<summary>Click to expand</summary>
+
+| Package Name |
+| --- |
+| AutoMapper |
+| AutoMapper.Extensions.Microsoft.DependencyInjection |
+| Microsoft.AspNetCore.Authentication.JwtBearer |
+| Microsoft.AspNetCore.Identity.EntityFrameworkCore |
+| Microsoft.AspNetCore.OpenApi |
+| Microsoft.EntityFrameworkCore.SqlServer |
+| Microsoft.EntityFrameworkCore.Tools |
+| Microsoft.IdentityModel.Tokens |
+| Swashbuckle.AspNetCore |
+| System.IdentityModel.Tokens.Jwt |
+
+</details>
+
+
+
 ## Folder Structure
 <pre>
 NZWALKS.API
