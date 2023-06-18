@@ -19,6 +19,13 @@ Incorporates Repositories structure to keep Controllers thin and limit access to
 
 **Walks:** Get(All), Get(one), Post(Create), Put(update), and Delete
 
+### Auth API
+This has its own database and has a roles property where a user can be a Reader or Writer.
+
+**Reader** Post(Register)
+
+**Writer** Post(Register)
+
 ## Dependencies
 
 <details>
