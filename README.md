@@ -67,4 +67,9 @@ NZWALKS.API
 </pre>
 
 
+## Database Migrations
+Since there are two databases, be sure to specify the database you are migrating to with -Context in the Package Console Manager.
+<pre>
+Add-Migration "<Describe Action, ie Adding Image Table>" -Context "NameOfDatabase" 
+</pre>
 
