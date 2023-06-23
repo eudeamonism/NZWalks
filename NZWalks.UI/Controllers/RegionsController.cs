@@ -11,6 +11,7 @@ namespace NZWalks.UI.Controllers
         {
             this.httpClientFactory = httpClientFactory;
         }
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
 
@@ -36,6 +37,12 @@ namespace NZWalks.UI.Controllers
             }
 
             return View(response);
+        }
+
+        [HttpGet]
+        public IActionResult Add()
+        {
+            return View();
         }
     }
 }
